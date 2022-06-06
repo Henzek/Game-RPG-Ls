@@ -3,10 +3,15 @@ package com.henzek.graphics;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.henzek.entities.Entity;
+import com.henzek.entities.Player;
+import com.henzek.main.KeyHandler;
 
 public class GamePanel extends Canvas implements Runnable {
 
@@ -26,25 +31,40 @@ public class GamePanel extends Canvas implements Runnable {
 
     // Criação de Thread
     Thread gameThread;
+    KeyHandler keyH = new KeyHandler();
     
     // Renderização de Layers
     private BufferedImage layer;
-    private SpriteLoad sprites;
     
-    private BufferedImage eu,ela;
+    //Carregamento das imagens
+    public SpriteLoad sprites;
+    
+    //Lista de Entity
+    public List<Entity> entities;
     
 	
 	public GamePanel() {
-		sprites = new SpriteLoad("/spritesheet.png");
-		eu = sprites.getSprite(originalTileSize*0, originalTileSize*0, originalTileSize, originalTileSize);
-		ela = sprites.getSprite(originalTileSize * 1, originalTileSize*0, originalTileSize, originalTileSize);
 		this.setPreferredSize(new Dimension(screenWidth, screenHeight));
-		this.setBackground(Color.BLACK);
+		this.setBackground(Color.GREEN);
 		this.setFocusable(true);
+		this.addKeyListener(keyH);
 		layer = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_RGB);
+		entities = new ArrayList<Entity>();
+		sprites = new SpriteLoad("/spritesheet.png");
+		
+		Player player = new Player(0,0, 16,16, sprites.getSprite(0, 0, originalTileSize, originalTileSize), keyH);
+		entities.add(player);
 	}
 	
-	public void update() {}
+	
+	
+	
+	public void update() {
+		for(int i = 0; i< entities.size(); i++) {
+			Entity e = entities.get(i);
+			e.update();
+		}
+	}
 	public void render() {
 		BufferStrategy bs = this.getBufferStrategy();
 		if(bs == null) {
@@ -55,25 +75,16 @@ public class GamePanel extends Canvas implements Runnable {
 		Graphics g = layer.getGraphics();
 		
 		// Layers
-        g.setColor(Color.CYAN);
-        g.fillOval(20, 20, 16, 16);
+		/////Background
+		g.setColor(Color.GREEN);
+		g.fillRect(0, 0, screenWidth, screenHeight);
+		///////////////
+		
+		for(int i = 0; i< entities.size(); i++) {
+			Entity e = entities.get(i);
+			e.render(g);
+		}
 
-        g.setColor(Color.RED);
-        g.fillOval(36, 20, 16, 16);
-
-        g.setFont(new Font("Arial", Font.BOLD, 20));
-        g.setColor(Color.WHITE);
-        g.drawString("Primeiro teste", 60, 17);
-        
-        /*Mostrar eu e ela*/
-        
-        g.setColor(Color.GREEN);
-        g.fillRect(30, 40, 64, 34);
-        
-        g.drawImage(ela, 40, 40, 32, 32, null);
-        g.drawImage(eu, 50, 40, 32, 32, null);
-        
-        
         
         /////////////////////////////////
         
