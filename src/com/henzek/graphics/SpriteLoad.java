@@ -7,7 +7,6 @@ import javax.imageio.ImageIO;
 
 public class SpriteLoad {
 	private BufferedImage spritesheet;
-
     public SpriteLoad(String path) {
     	try {
     		spritesheet = ImageIO.read(getClass().getResource(path));
@@ -15,7 +14,6 @@ public class SpriteLoad {
         	e.printStackTrace();
         }
     }
-
     public BufferedImage getSprite(int x, int y, int w, int h) {
         return spritesheet.getSubimage(x, y, w, h);
     }

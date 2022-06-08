@@ -37,7 +37,7 @@ public class GamePanel extends Canvas implements Runnable {
     private BufferedImage layer;
     
     //Carregamento das imagens
-    public SpriteLoad sprites;
+    public static SpriteLoad sprites;
     
     //Lista de Entity
     public List<Entity> entities;
@@ -48,15 +48,20 @@ public class GamePanel extends Canvas implements Runnable {
 		this.setBackground(Color.GREEN);
 		this.setFocusable(true);
 		this.addKeyListener(keyH);
+		initializations();
+		loadEntities();
+	}
+	
+	public void initializations() {
 		layer = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_RGB);
-		entities = new ArrayList<Entity>();
 		sprites = new SpriteLoad("/spritesheet.png");
-		
+	}
+	
+	public void loadEntities() {
+		entities = new ArrayList<Entity>();
 		Player player = new Player(0,0, 16,16, sprites.getSprite(0, 0, originalTileSize, originalTileSize), keyH);
 		entities.add(player);
 	}
-	
-	
 	
 	
 	public void update() {
